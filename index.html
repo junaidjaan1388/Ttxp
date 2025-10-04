@@ -24,7 +24,7 @@
         
         .desktop {
             width: 100%;
-            max-width: 1200px;
+            max-width: 1000px;
         }
         
         /* Taskbar */
@@ -250,123 +250,6 @@
             margin-top: 4px;
         }
         
-        /* Video Preview Section */
-        .video-preview-section {
-            background: white;
-            border: 2px inset #c0c0c0;
-            padding: 15px;
-            margin: 15px 0;
-        }
-        
-        .video-container {
-            position: relative;
-            max-width: 400px;
-            margin: 0 auto;
-        }
-        
-        .video-preview {
-            width: 100%;
-            background: #000;
-            border: 2px inset #c0c0c0;
-        }
-        
-        .video-controls {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 10px;
-            flex-wrap: wrap;
-        }
-        
-        .video-info {
-            background: #f9f9f9;
-            border: 1px solid #d0d0d0;
-            padding: 8px;
-            margin-top: 10px;
-            font-size: 10px;
-        }
-        
-        /* Auto-Scroll Controls */
-        .auto-scroll-controls {
-            background: #f0f0f0;
-            border: 2px outset #c0c0c0;
-            padding: 10px;
-            margin: 10px 0;
-        }
-        
-        .scroll-settings {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin: 10px 0;
-        }
-        
-        .scroll-indicator {
-            background: #e8e8e8;
-            border: 1px solid #c0c0c0;
-            padding: 5px;
-            text-align: center;
-            font-size: 10px;
-            margin: 5px 0;
-        }
-        
-        .scroll-progress {
-            background: #f1f1f1;
-            border: 2px inset #c0c0c0;
-            height: 12px;
-            margin: 5px 0;
-        }
-        
-        .scroll-progress-bar {
-            background: linear-gradient(to bottom, #3c7fb1, #2d6b9e);
-            height: 100%;
-            width: 0%;
-            transition: width 0.1s linear;
-        }
-        
-        /* TikTok Style Scroll Feed */
-        .tiktok-feed {
-            background: #000;
-            border: 2px inset #c0c0c0;
-            height: 600px;
-            overflow-y: auto;
-            margin: 15px 0;
-            position: relative;
-        }
-        
-        .tiktok-video-item {
-            height: 600px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #000;
-            border-bottom: 1px solid #333;
-            position: relative;
-        }
-        
-        .tiktok-video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .video-overlay {
-            position: absolute;
-            bottom: 20px;
-            left: 0;
-            right: 0;
-            color: white;
-            padding: 10px;
-            background: linear-gradient(transparent, rgba(0,0,0,0.7));
-        }
-        
-        .video-stats {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 10px;
-            font-size: 12px;
-        }
-        
         /* Status Sections */
         .status-section {
             display: none;
@@ -385,6 +268,73 @@
             font-weight: bold;
             margin-bottom: 8px;
             color: #000;
+        }
+        
+        .status-stages {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            font-size: 9px;
+        }
+        
+        .status-stage {
+            text-align: center;
+            flex: 1;
+            padding: 2px;
+        }
+        
+        .status-stage.active {
+            color: #000;
+            font-weight: bold;
+        }
+        
+        .status-stage.completed::before {
+            content: '✓ ';
+            color: green;
+        }
+        
+        /* File Info */
+        .file-info {
+            background: white;
+            border: 2px inset #c0c0c0;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 10px;
+        }
+        
+        .file-info-row {
+            display: flex;
+            margin-bottom: 4px;
+        }
+        
+        .file-info-label {
+            font-weight: bold;
+            width: 80px;
+        }
+        
+        /* Results */
+        .result-section {
+            display: none;
+            margin-top: 15px;
+        }
+        
+        .result-section.active {
+            display: block;
+        }
+        
+        .video-preview {
+            width: 100%;
+            max-width: 400px;
+            background: #000;
+            margin: 10px 0;
+            border: 2px inset #c0c0c0;
+        }
+        
+        .download-options {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
         }
         
         /* Tabs */
@@ -440,6 +390,108 @@
             background: #f0fff0;
         }
         
+        /* Batch Download */
+        .batch-list {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 2px inset #c0c0c0;
+            background: white;
+            margin: 10px 0;
+        }
+        
+        .batch-item {
+            padding: 4px 8px;
+            border-bottom: 1px solid #d0d0d0;
+            font-size: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .batch-item:last-child {
+            border-bottom: none;
+        }
+        
+        .batch-status {
+            font-size: 9px;
+            padding: 1px 4px;
+            border-radius: 2px;
+        }
+        
+        .batch-status.queued { background: #fffacd; }
+        .batch-status.downloading { background: #add8e6; }
+        .batch-status.completed { background: #90ee90; }
+        .batch-status.error { background: #ffb6c1; }
+        
+        /* Storage Manager */
+        .storage-info {
+            background: white;
+            border: 2px inset #c0c0c0;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        
+        .storage-bar {
+            background: #f1f1f1;
+            border: 2px inset #c0c0c0;
+            height: 20px;
+            margin: 5px 0;
+        }
+        
+        .storage-used {
+            background: linear-gradient(to bottom, #3c7fb1, #2d6b9e);
+            height: 100%;
+            width: 65%;
+            transition: width 0.3s ease;
+        }
+        
+        .storage-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            font-size: 10px;
+            margin-top: 10px;
+        }
+        
+        .storage-stat {
+            padding: 5px;
+            background: #f9f9f9;
+            border: 1px solid #d0d0d0;
+        }
+        
+        /* Mobile Storage */
+        .mobile-storage {
+            background: white;
+            border: 2px inset #c0c0c0;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        
+        .device-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin: 10px 0;
+        }
+        
+        .device {
+            background: #f9f9f9;
+            border: 2px outset #c0c0c0;
+            padding: 8px;
+            text-align: center;
+            cursor: pointer;
+        }
+        
+        .device.active {
+            border: 2px inset #c0c0c0;
+            background: #e8e8e8;
+        }
+        
+        .device-icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
         /* Grid Layout */
         .xp-grid {
             display: grid;
@@ -453,16 +505,12 @@
                 grid-template-columns: 1fr;
             }
             
-            .scroll-settings {
+            .download-options {
+                flex-direction: column;
+            }
+            
+            .device-list {
                 grid-template-columns: 1fr;
-            }
-            
-            .tiktok-feed {
-                height: 400px;
-            }
-            
-            .tiktok-video-item {
-                height: 400px;
             }
         }
     </style>
@@ -472,7 +520,7 @@
         <!-- Main Application Window -->
         <div class="xp-window">
             <div class="window-title">
-                <span>🚀 TikTok Video Downloader - Auto Scroll Edition</span>
+                <span>🚀 TikTok Video Downloader - Windows XP Edition</span>
                 <div class="window-controls">
                     <div class="window-control">_</div>
                     <div class="window-control">□</div>
@@ -482,8 +530,9 @@
             
             <div class="xp-tabs">
                 <div class="xp-tab active" data-tab="single">Single Download</div>
-                <div class="xp-tab" data-tab="scroll">Auto Scroll Preview</div>
                 <div class="xp-tab" data-tab="batch">Batch Download</div>
+                <div class="xp-tab" data-tab="storage">Storage Manager</div>
+                <div class="xp-tab" data-tab="mobile">Mobile Storage</div>
                 <div class="xp-tab" data-tab="about">About</div>
             </div>
             
@@ -492,113 +541,100 @@
                 <div class="form-group">
                     <label class="form-label">RapidAPI Key:</label>
                     <input type="text" class="xp-input" id="api-key" placeholder="Enter your RapidAPI key">
+                    <div style="font-size: 9px; color: #666; margin-top: 2px;">
+                        Get key from: <a href="https://rapidapi.com/yi005/api/tiktok-video-no-watermark2/" target="_blank">RapidAPI</a>
+                    </div>
                 </div>
                 
                 <div class="xp-grid">
                     <div class="form-group">
+                        <label class="form-label">Download Type:</label>
+                        <select class="xp-select" id="endpoint-type">
+                            <option value="video">Single Video</option>
+                            <option value="feed">User Feed</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group" id="url-group">
                         <label class="form-label">TikTok URL:</label>
                         <input type="text" class="xp-input" id="tiktok-url" placeholder="https://www.tiktok.com/@username/video/1234567890">
                     </div>
                     
-                    <div class="form-group">
-                        <label class="form-label">Preview Mode:</label>
-                        <select class="xp-select" id="preview-mode">
-                            <option value="normal">Normal Preview</option>
-                            <option value="autoscroll">Auto-Scroll (10s segments)</option>
-                        </select>
+                    <div class="form-group" id="username-group" style="display: none;">
+                        <label class="form-label">Username:</label>
+                        <input type="text" class="xp-input" id="tiktok-username" placeholder="username (without @)">
                     </div>
                 </div>
                 
                 <button class="xp-button primary" id="start-download" style="width: 100%;">
-                    🚀 Download & Preview
+                    🚀 Start Download
                 </button>
                 
-                <div class="video-preview-section" id="preview-section">
-                    <div class="status-title">Video Preview</div>
-                    <div class="video-container">
-                        <video class="video-preview" id="video-preview" controls></video>
-                        
-                        <!-- Auto-Scroll Controls -->
-                        <div class="auto-scroll-controls" id="auto-scroll-controls" style="display: none;">
-                            <div class="status-title">🎬 Auto-Scroll Preview</div>
-                            <div class="scroll-settings">
-                                <div>
-                                    <label class="form-label">Segment Duration:</label>
-                                    <select class="xp-select" id="segment-duration">
-                                        <option value="5">5 seconds</option>
-                                        <option value="10" selected>10 seconds</option>
-                                        <option value="15">15 seconds</option>
-                                        <option value="30">30 seconds</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="form-label">Auto-Play:</label>
-                                    <select class="xp-select" id="auto-play">
-                                        <option value="continuous">Continuous</option>
-                                        <option value="single">Single Segment</option>
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            <div class="scroll-indicator" id="scroll-indicator">
-                                Segment 1/6 - 0:00 to 0:10
-                            </div>
-                            
-                            <div class="scroll-progress">
-                                <div class="scroll-progress-bar" id="scroll-progress-bar"></div>
-                            </div>
-                            
-                            <div class="video-controls">
-                                <button class="xp-button" id="start-scroll">▶️ Start Auto-Scroll</button>
-                                <button class="xp-button" id="pause-scroll">⏸️ Pause</button>
-                                <button class="xp-button" id="prev-segment">⏮️ Previous</button>
-                                <button class="xp-button" id="next-segment">⏭️ Next</button>
-                            </div>
-                        </div>
-                        
-                        <div class="video-info" id="video-info">
-                            <strong>Video Information:</strong><br>
-                            Duration: <span id="video-duration">--:--</span> | 
-                            Segments: <span id="segment-count">0</span> | 
-                            Status: <span id="playback-status">Ready</span>
-                        </div>
-                    </div>
-                    
-                    <div class="download-options" style="margin-top: 15px;">
-                        <button class="xp-button primary" id="download-nowatermark">⬇️ Download (No Watermark)</button>
-                        <button class="xp-button" id="download-watermark">⬇️ With Watermark</button>
-                    </div>
+                <!-- Progress sections remain the same as previous example -->
+                <div class="status-section" id="starting-section">
+                    <!-- Starting progress content -->
+                </div>
+                
+                <div class="result-section" id="result-section">
+                    <!-- Result content -->
                 </div>
             </div>
             
-            <!-- Auto Scroll Preview Tab -->
-            <div class="tab-content" id="scroll-tab">
+            <!-- Batch Download Tab -->
+            <div class="tab-content" id="batch-tab">
                 <div class="form-group">
-                    <label class="form-label">TikTok Profile URL or Hashtag:</label>
-                    <input type="text" class="xp-input" id="profile-url" placeholder="https://www.tiktok.com/@username or #hashtag">
+                    <label class="form-label">RapidAPI Key:</label>
+                    <input type="text" class="xp-input" id="batch-api-key" placeholder="Enter your RapidAPI key">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Video URLs (one per line):</label>
+                    <textarea class="xp-textarea" id="batch-urls" placeholder="https://www.tiktok.com/@user1/video/123
+https://www.tiktok.com/@user2/video/456
+https://www.tiktok.com/@user3/video/789"></textarea>
                 </div>
                 
                 <div class="xp-grid">
                     <div class="form-group">
-                        <label class="form-label">Scroll Speed:</label>
-                        <select class="xp-select" id="scroll-speed">
-                            <option value="5000">5 seconds per video</option>
-                            <option value="10000" selected>10 seconds per video</option>
-                            <option value="15000">15 seconds per video</option>
-                            <option value="30000">30 seconds per video</option>
+                        <label class="form-label">Simultaneous Downloads:</label>
+                        <select class="xp-select" id="parallel-downloads">
+                            <option value="1">1 at a time</option>
+                            <option value="2">2 at a time</option>
+                            <option value="3" selected>3 at a time</option>
+                            <option value="5">5 at a time</option>
                         </select>
                     </div>
                     
                     <div class="form-group">
-                        <label class="form-label">Max Videos:</label>
-                        <select class="xp-select" id="max-videos">
-                            <option value="10">10 videos</option>
-                            <option value="20">20 videos</option>
-                            <option value="50" selected>50 videos</option>
-                            <option value="100">100 videos</option>
-                        </select>
+                        <label class="form-label">Download Folder:</label>
+                        <input type="text" class="xp-input" id="batch-folder" value="C:\Downloads\TikTok Batch\" readonly>
                     </div>
                 </div>
                 
-                <div class="video-controls">
-                    <button class="
+                <div class="download-options">
+                    <button class="xp-button primary" id="start-batch">📥 Start Batch Download</button>
+                    <button class="xp-button" id="pause-batch">⏸️ Pause All</button>
+                    <button class="xp-button" id="clear-batch">🗑️ Clear List</button>
+                </div>
+                
+                <div class="batch-list" id="batch-list">
+                    <div class="batch-item">
+                        <span>No videos in queue</span>
+                        <span class="batch-status queued">Empty</span>
+                    </div>
+                </div>
+                
+                <div class="status-section" id="batch-progress-section">
+                    <div class="status-title">Batch Download Progress</div>
+                    <div class="progress-container">
+                        <div class="progress-bar" id="batch-overall-progress"></div>
+                    </div>
+                    <div class="progress-text" id="batch-progress-text">0% - Waiting to start</div>
+                    
+                    <div class="file-info">
+                        <div class="file-info-row">
+                            <span class="file-info-label">Total:</span>
+                            <span id="batch-total">0 videos</span>
+                        </div>
+                        <div class="file-info-row">
+                            <span class="file-inf
