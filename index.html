@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok Video Downloader - Windows XP</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Tahoma', 'Arial', sans-serif;
+            background: #008080 url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.1"><rect fill="%23008080" width="100" height="100"/><path d="M0 0L100 100M100 0L0 100" stroke="%2300a000" stroke-width="1"/></svg>');
+            color: #000;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .desktop {
+            width: 100%;
+            max-width: 1200px;
+        }
+        
+        /* Taskbar */
+        .taskbar {
+            background: linear-gradient(to bottom, #245edc 0%, #1b4eb9 50%, #0f3b9e 51%, #1b4eb9 100%);
+            height: 40px;
+            border-top: 1px solid #608fe8;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            position: relative;
+            z-index: 1000;
+        }
+        
+        .start-button {
+            background: linear-gradient(to bottom, #5cb300 0%, #4c9900 50%, #408000 51%, #4c9900 100%);
+            border: 1px solid #2d6600;
+            color: white;
+            padding: 4px 12px;
+            font-size: 11px;
+            font-weight: bold;
+            border-radius: 3px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .start-button:hover {
+            background: linear-gradient(to bottom, #66cc00 0%, #55aa00 50%, #448800 51%, #55aa00 100%);
+        }
+        
+        .taskbar-time {
+            color: white;
+            font-size: 11px;
+            margin-left: auto;
+            padding: 4px 8px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 3px;
+        }
+        
+        /* Main Window */
+        .xp-window {
+            background: #ece9d8;
+            border: 2px solid #003c74;
+            border-radius: 0;
+            box-shadow: 4px 4px 12px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+        }
+        
+        .window-title {
+            background: linear-gradient(to right, #0a246a, #a6caf0);
+            color: white;
+            padding: 6px 10px;
+            font-size: 12px;
+            font-weight: bold;
+            border-bottom: 1px solid #003c74;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .window-controls {
+            display: flex;
+            gap: 2px;
+        }
+        
+        .window-control {
+            width: 16px;
+            height: 14px;
+            background: #c0c0c0;
+            border: 1px solid #808080;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        
+        .window-control:hover {
+            background: #d4d4d4;
+        }
+        
+        .window-content {
+            padding: 20px;
+        }
+        
+        /* XP Form Elements */
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 11px;
+            font-weight: bold;
+            margin-bottom: 4px;
+            color: #000;
+        }
+        
+        .xp-input {
+            width: 100%;
+            padding: 4px 6px;
+            border: 2px inset #c0c0c0;
+            background: white;
+            font-size: 11px;
+            font-family: 'Tahoma', 'Arial', sans-serif;
+        }
+        
+        .xp-input:focus {
+            outline: 1px dotted #000;
+        }
+        
+        .xp-textarea {
+            width: 100%;
+            height: 80px;
+            padding: 4px 6px;
+            border: 2px inset #c0c0c0;
+            background: white;
+            font-size: 11px;
+            font-family: 'Tahoma', 'Arial', sans-serif;
+            resize: vertical;
+        }
+        
+        .xp-select {
+            width: 100%;
+            padding: 3px;
+            border: 2px inset #c0c0c0;
+            background: white;
+            font-size: 11px;
+            font-family: 'Tahoma', 'Arial', sans-serif;
+        }
+        
+        .xp-button {
+            background: linear-gradient(to bottom, #f0f0f0, #d4d4d4);
+            border: 1px solid #7c7c7c;
+            padding: 6px 16px;
+            font-size: 11px;
+            font-family: 'Tahoma', 'Arial', sans-serif;
+            cursor: pointer;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        
+        .xp-button:hover {
+            background: linear-gradient(to bottom, #e8e8e8, #c8c8c8);
+        }
+        
+        .xp-button:active {
+            background: linear-gradient(to bottom, #d4d4d4, #f0f0f0);
+            border: 1px inset #7c7c7c;
+        }
+        
+        .xp-button.primary {
+            background: linear-gradient(to bottom, #245edc, #1b4eb9);
+            color: white;
+            border: 1px solid #0f3b9e;
+        }
+        
+        .xp-button.primary:hover {
+            background: linear-gradient(to bottom, #2d6bec, #2358c6);
+        }
+        
+        /* Progress Bars */
+        .progress-container {
+            background: #f1f1f1;
+            border: 2px inset #c0c0c0;
+            padding: 2px;
+            margin: 10px 0;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(to bottom, 
+                #3c7fb1 0%, 
+                #3c7fb1 50%, 
+                #2d6b9e 51%, 
+                #2d6b9e 100%);
+            height: 18px;
+            width: 0%;
+            transition: width 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, 
+                rgba(255,255,255,0.3) 0%, 
+                rgba(255,255,255,0.1) 50%, 
+                rgba(0,0,0,0.1) 51%, 
+                rgba(0,0,0,0.3) 100%);
+            pointer-events: none;
+        }
+        
+        .progress-bar.animated::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(255,255,255,0.4) 50%, 
+                transparent 100%);
+            animation: xp-shine 2s infinite;
+        }
+        
+        @keyframes xp-shine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        .progress-text {
+            font-size: 10px;
+            color: #000;
+            text-align: center;
+            margin-top: 4px;
+        }
+        
+        /* Video Preview Section */
+        .video-preview-section {
+            background: white;
+            border: 2px inset #c0c0c0;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .video-container {
+            position: relative;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        .video-preview {
+            width: 100%;
+            background: #000;
+            border: 2px inset #c0c0c0;
+        }
+        
+        .video-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .video-info {
+            background: #f9f9f9;
+            border: 1px solid #d0d0d0;
+            padding: 8px;
+            margin-top: 10px;
+            font-size: 10px;
+        }
+        
+        /* Auto-Scroll Controls */
+        .auto-scroll-controls {
+            background: #f0f0f0;
+            border: 2px outset #c0c0c0;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        
+        .scroll-settings {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        
+        .scroll-indicator {
+            background: #e8e8e8;
+            border: 1px solid #c0c0c0;
+            padding: 5px;
+            text-align: center;
+            font-size: 10px;
+            margin: 5px 0;
+        }
+        
+        .scroll-progress {
+            background: #f1f1f1;
+            border: 2px inset #c0c0c0;
+            height: 12px;
+            margin: 5px 0;
+        }
+        
+        .scroll-progress-bar {
+            background: linear-gradient(to bottom, #3c7fb1, #2d6b9e);
+            height: 100%;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+        
+        /* TikTok Style Scroll Feed */
+        .tiktok-feed {
+            background: #000;
+            border: 2px inset #c0c0c0;
+            height: 600px;
+            overflow-y: auto;
+            margin: 15px 0;
+            position: relative;
+        }
+        
+        .tiktok-video-item {
+            height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+            border-bottom: 1px solid #333;
+            position: relative;
+        }
+        
+        .tiktok-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .video-overlay {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            color: white;
+            padding: 10px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+        }
+        
+        .video-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+            font-size: 12px;
+        }
+        
+        /* Status Sections */
+        .status-section {
+            display: none;
+            margin: 15px 0;
+            padding: 15px;
+            background: white;
+            border: 2px inset #c0c0c0;
+        }
+        
+        .status-section.active {
+            display: block;
+        }
+        
+        .status-title {
+            font-size: 11px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #000;
+        }
+        
+        /* Tabs */
+        .xp-tabs {
+            display: flex;
+            background: #c0c0c0;
+            border-bottom: 2px solid #003c74;
+            padding: 2px 2px 0 2px;
+        }
+        
+        .xp-tab {
+            background: linear-gradient(to bottom, #d4d4d4, #c0c0c0);
+            border: 1px solid #808080;
+            border-bottom: none;
+            padding: 4px 12px;
+            font-size: 11px;
+            cursor: pointer;
+            margin-right: 2px;
+            border-radius: 3px 3px 0 0;
+        }
+        
+        .xp-tab.active {
+            background: linear-gradient(to bottom, #ece9d8, #d4d4d4);
+            border-bottom: 1px solid #ece9d8;
+            margin-bottom: -1px;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 15px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Message Box */
+        .xp-message {
+            padding: 10px;
+            margin: 10px 0;
+            border: 2px inset #c0c0c0;
+            background: white;
+            font-size: 11px;
+        }
+        
+        .xp-message.error {
+            border-color: #ff6b6b;
+            background: #ffebeb;
+        }
+        
+        .xp-message.success {
+            border-color: #90ee90;
+            background: #f0fff0;
+        }
+        
+        /* Grid Layout */
+        .xp-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .xp-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .scroll-settings {
+                grid-template-columns: 1fr;
+            }
+            
+            .tiktok-feed {
+                height: 400px;
+            }
+            
+            .tiktok-video-item {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="desktop">
+        <!-- Main Application Window -->
+        <div class="xp-window">
+            <div class="window-title">
+                <span>🚀 TikTok Video Downloader - Auto Scroll Edition</span>
+                <div class="window-controls">
+                    <div class="window-control">_</div>
+                    <div class="window-control">□</div>
+                    <div class="window-control">×</div>
+                </div>
+            </div>
+            
+            <div class="xp-tabs">
+                <div class="xp-tab active" data-tab="single">Single Download</div>
+                <div class="xp-tab" data-tab="scroll">Auto Scroll Preview</div>
+                <div class="xp-tab" data-tab="batch">Batch Download</div>
+                <div class="xp-tab" data-tab="about">About</div>
+            </div>
+            
+            <!-- Single Download Tab -->
+            <div class="tab-content active" id="single-tab">
+                <div class="form-group">
+                    <label class="form-label">RapidAPI Key:</label>
+                    <input type="text" class="xp-input" id="api-key" placeholder="Enter your RapidAPI key">
+                </div>
+                
+                <div class="xp-grid">
+                    <div class="form-group">
+                        <label class="form-label">TikTok URL:</label>
+                        <input type="text" class="xp-input" id="tiktok-url" placeholder="https://www.tiktok.com/@username/video/1234567890">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Preview Mode:</label>
+                        <select class="xp-select" id="preview-mode">
+                            <option value="normal">Normal Preview</option>
+                            <option value="autoscroll">Auto-Scroll (10s segments)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button class="xp-button primary" id="start-download" style="width: 100%;">
+                    🚀 Download & Preview
+                </button>
+                
+                <div class="video-preview-section" id="preview-section">
+                    <div class="status-title">Video Preview</div>
+                    <div class="video-container">
+                        <video class="video-preview" id="video-preview" controls></video>
+                        
+                        <!-- Auto-Scroll Controls -->
+                        <div class="auto-scroll-controls" id="auto-scroll-controls" style="display: none;">
+                            <div class="status-title">🎬 Auto-Scroll Preview</div>
+                            <div class="scroll-settings">
+                                <div>
+                                    <label class="form-label">Segment Duration:</label>
+                                    <select class="xp-select" id="segment-duration">
+                                        <option value="5">5 seconds</option>
+                                        <option value="10" selected>10 seconds</option>
+                                        <option value="15">15 seconds</option>
+                                        <option value="30">30 seconds</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="form-label">Auto-Play:</label>
+                                    <select class="xp-select" id="auto-play">
+                                        <option value="continuous">Continuous</option>
+                                        <option value="single">Single Segment</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="scroll-indicator" id="scroll-indicator">
+                                Segment 1/6 - 0:00 to 0:10
+                            </div>
+                            
+                            <div class="scroll-progress">
+                                <div class="scroll-progress-bar" id="scroll-progress-bar"></div>
+                            </div>
+                            
+                            <div class="video-controls">
+                                <button class="xp-button" id="start-scroll">▶️ Start Auto-Scroll</button>
+                                <button class="xp-button" id="pause-scroll">⏸️ Pause</button>
+                                <button class="xp-button" id="prev-segment">⏮️ Previous</button>
+                                <button class="xp-button" id="next-segment">⏭️ Next</button>
+                            </div>
+                        </div>
+                        
+                        <div class="video-info" id="video-info">
+                            <strong>Video Information:</strong><br>
+                            Duration: <span id="video-duration">--:--</span> | 
+                            Segments: <span id="segment-count">0</span> | 
+                            Status: <span id="playback-status">Ready</span>
+                        </div>
+                    </div>
+                    
+                    <div class="download-options" style="margin-top: 15px;">
+                        <button class="xp-button primary" id="download-nowatermark">⬇️ Download (No Watermark)</button>
+                        <button class="xp-button" id="download-watermark">⬇️ With Watermark</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Auto Scroll Preview Tab -->
+            <div class="tab-content" id="scroll-tab">
+                <div class="form-group">
+                    <label class="form-label">TikTok Profile URL or Hashtag:</label>
+                    <input type="text" class="xp-input" id="profile-url" placeholder="https://www.tiktok.com/@username or #hashtag">
+                </div>
+                
+                <div class="xp-grid">
+                    <div class="form-group">
+                        <label class="form-label">Scroll Speed:</label>
+                        <select class="xp-select" id="scroll-speed">
+                            <option value="5000">5 seconds per video</option>
+                            <option value="10000" selected>10 seconds per video</option>
+                            <option value="15000">15 seconds per video</option>
+                            <option value="30000">30 seconds per video</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Max Videos:</label>
+                        <select class="xp-select" id="max-videos">
+                            <option value="10">10 videos</option>
+                            <option value="20">20 videos</option>
+                            <option value="50" selected>50 videos</option>
+                            <option value="100">100 videos</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="video-controls">
+                    <button class="
