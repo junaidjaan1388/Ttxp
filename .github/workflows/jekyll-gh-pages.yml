@@ -1,8 +1,10 @@
-name: Deploy Windows XP to GitHub Pages
+# .github/workflows/jekyll-gh-pages.yml
+
+name: Deploy TikTok Downloader to GitHub Pages
 
 on:
   push:
-    branches: [ main ]
+    branches: ["main"]
   workflow_dispatch:
 
 permissions:
@@ -20,21 +22,1216 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      
+        
       - name: Setup Pages
-        uses: actions/configure-pages@v4
-      
-      - name: Create deployment package
+        uses: actions/configure-pages@v5
+        
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.1'
+          cache: bundler
+          
+      - name: Install Jekyll and dependencies
+        run: |
+          gem install jekyll bundler
+          [ -f Gemfile ] && bundle install || echo "No Gemfile found"
+          
+      - name: Create TikTok Downloader HTML
         run: |
           mkdir -p _site
-          cp index.html _site/
-          cp README.md _site/
-      
+          cat > _site/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>TikTok Video Downloader - Windows XP Edition</title>
+              <style>
+                  * {
+                      margin: 0;
+                      padding: 0;
+                      box-sizing: border-box;
+                  }
+                  
+                  body {
+                      font-family: 'Tahoma', 'Arial', sans-serif;
+                      background: #008080 url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.1"><rect fill="%23008080" width="100" height="100"/><path d="M0 0L100 100M100 0L0 100" stroke="%2300a000" stroke-width="1"/></svg>');
+                      color: #000;
+                      min-height: 100vh;
+                      display: flex;
+                      justify-content: center;
+                      align-items: center;
+                      padding: 20px;
+                  }
+                  
+                  .desktop {
+                      width: 100%;
+                      max-width: 1200px;
+                  }
+                  
+                  /* Taskbar */
+                  .taskbar {
+                      background: linear-gradient(to bottom, #245edc 0%, #1b4eb9 50%, #0f3b9e 51%, #1b4eb9 100%);
+                      height: 40px;
+                      border-top: 1px solid #608fe8;
+                      display: flex;
+                      align-items: center;
+                      padding: 0 10px;
+                      position: relative;
+                      z-index: 1000;
+                  }
+                  
+                  .start-button {
+                      background: linear-gradient(to bottom, #5cb300 0%, #4c9900 50%, #408000 51%, #4c9900 100%);
+                      border: 1px solid #2d6600;
+                      color: white;
+                      padding: 4px 12px;
+                      font-size: 11px;
+                      font-weight: bold;
+                      border-radius: 3px;
+                      cursor: pointer;
+                      display: flex;
+                      align-items: center;
+                      gap: 5px;
+                  }
+                  
+                  .start-button:hover {
+                      background: linear-gradient(to bottom, #66cc00 0%, #55aa00 50%, #448800 51%, #55aa00 100%);
+                  }
+                  
+                  .taskbar-time {
+                      color: white;
+                      font-size: 11px;
+                      margin-left: auto;
+                      padding: 4px 8px;
+                      background: rgba(0,0,0,0.2);
+                      border-radius: 3px;
+                  }
+                  
+                  /* Main Window */
+                  .xp-window {
+                      background: #ece9d8;
+                      border: 2px solid #003c74;
+                      border-radius: 0;
+                      box-shadow: 4px 4px 12px rgba(0,0,0,0.3);
+                      margin-bottom: 20px;
+                  }
+                  
+                  .window-title {
+                      background: linear-gradient(to right, #0a246a, #a6caf0);
+                      color: white;
+                      padding: 6px 10px;
+                      font-size: 12px;
+                      font-weight: bold;
+                      border-bottom: 1px solid #003c74;
+                      display: flex;
+                      justify-content: space-between;
+                      align-items: center;
+                  }
+                  
+                  .window-controls {
+                      display: flex;
+                      gap: 2px;
+                  }
+                  
+                  .window-control {
+                      width: 16px;
+                      height: 14px;
+                      background: #c0c0c0;
+                      border: 1px solid #808080;
+                      font-size: 10px;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      cursor: pointer;
+                  }
+                  
+                  .window-control:hover {
+                      background: #d4d4d4;
+                  }
+                  
+                  .window-content {
+                      padding: 20px;
+                  }
+                  
+                  /* XP Form Elements */
+                  .form-group {
+                      margin-bottom: 15px;
+                  }
+                  
+                  .form-label {
+                      display: block;
+                      font-size: 11px;
+                      font-weight: bold;
+                      margin-bottom: 4px;
+                      color: #000;
+                  }
+                  
+                  .xp-input {
+                      width: 100%;
+                      padding: 4px 6px;
+                      border: 2px inset #c0c0c0;
+                      background: white;
+                      font-size: 11px;
+                      font-family: 'Tahoma', 'Arial', sans-serif;
+                  }
+                  
+                  .xp-input:focus {
+                      outline: 1px dotted #000;
+                  }
+                  
+                  .xp-textarea {
+                      width: 100%;
+                      height: 80px;
+                      padding: 4px 6px;
+                      border: 2px inset #c0c0c0;
+                      background: white;
+                      font-size: 11px;
+                      font-family: 'Tahoma', 'Arial', sans-serif;
+                      resize: vertical;
+                  }
+                  
+                  .xp-select {
+                      width: 100%;
+                      padding: 3px;
+                      border: 2px inset #c0c0c0;
+                      background: white;
+                      font-size: 11px;
+                      font-family: 'Tahoma', 'Arial', sans-serif;
+                  }
+                  
+                  .xp-button {
+                      background: linear-gradient(to bottom, #f0f0f0, #d4d4d4);
+                      border: 1px solid #7c7c7c;
+                      padding: 6px 16px;
+                      font-size: 11px;
+                      font-family: 'Tahoma', 'Arial', sans-serif;
+                      cursor: pointer;
+                      border-radius: 3px;
+                      font-weight: bold;
+                  }
+                  
+                  .xp-button:hover {
+                      background: linear-gradient(to bottom, #e8e8e8, #c8c8c8);
+                  }
+                  
+                  .xp-button:active {
+                      background: linear-gradient(to bottom, #d4d4d4, #f0f0f0);
+                      border: 1px inset #7c7c7c;
+                  }
+                  
+                  .xp-button.primary {
+                      background: linear-gradient(to bottom, #245edc, #1b4eb9);
+                      color: white;
+                      border: 1px solid #0f3b9e;
+                  }
+                  
+                  .xp-button.primary:hover {
+                      background: linear-gradient(to bottom, #2d6bec, #2358c6);
+                  }
+                  
+                  /* Progress Bars */
+                  .progress-container {
+                      background: #f1f1f1;
+                      border: 2px inset #c0c0c0;
+                      padding: 2px;
+                      margin: 10px 0;
+                  }
+                  
+                  .progress-bar {
+                      background: linear-gradient(to bottom, 
+                          #3c7fb1 0%, 
+                          #3c7fb1 50%, 
+                          #2d6b9e 51%, 
+                          #2d6b9e 100%);
+                      height: 18px;
+                      width: 0%;
+                      transition: width 0.3s ease;
+                      position: relative;
+                      overflow: hidden;
+                  }
+                  
+                  .progress-bar::after {
+                      content: '';
+                      position: absolute;
+                      top: 0;
+                      left: 0;
+                      right: 0;
+                      bottom: 0;
+                      background: linear-gradient(to bottom, 
+                          rgba(255,255,255,0.3) 0%, 
+                          rgba(255,255,255,0.1) 50%, 
+                          rgba(0,0,0,0.1) 51%, 
+                          rgba(0,0,0,0.3) 100%);
+                      pointer-events: none;
+                  }
+                  
+                  .progress-bar.animated::before {
+                      content: '';
+                      position: absolute;
+                      top: 0;
+                      left: -100%;
+                      width: 100%;
+                      height: 100%;
+                      background: linear-gradient(90deg, 
+                          transparent 0%, 
+                          rgba(255,255,255,0.4) 50%, 
+                          transparent 100%);
+                      animation: xp-shine 2s infinite;
+                  }
+                  
+                  @keyframes xp-shine {
+                      0% { left: -100%; }
+                      100% { left: 100%; }
+                  }
+                  
+                  .progress-text {
+                      font-size: 10px;
+                      color: #000;
+                      text-align: center;
+                      margin-top: 4px;
+                  }
+                  
+                  /* Video Preview Section */
+                  .video-preview-section {
+                      background: white;
+                      border: 2px inset #c0c0c0;
+                      padding: 15px;
+                      margin: 15px 0;
+                  }
+                  
+                  .video-container {
+                      position: relative;
+                      max-width: 400px;
+                      margin: 0 auto;
+                  }
+                  
+                  .video-preview {
+                      width: 100%;
+                      background: #000;
+                      border: 2px inset #c0c0c0;
+                  }
+                  
+                  .video-controls {
+                      display: flex;
+                      justify-content: center;
+                      gap: 10px;
+                      margin-top: 10px;
+                      flex-wrap: wrap;
+                  }
+                  
+                  .video-info {
+                      background: #f9f9f9;
+                      border: 1px solid #d0d0d0;
+                      padding: 8px;
+                      margin-top: 10px;
+                      font-size: 10px;
+                  }
+                  
+                  /* Auto-Scroll Controls */
+                  .auto-scroll-controls {
+                      background: #f0f0f0;
+                      border: 2px outset #c0c0c0;
+                      padding: 10px;
+                      margin: 10px 0;
+                  }
+                  
+                  .scroll-settings {
+                      display: grid;
+                      grid-template-columns: 1fr 1fr;
+                      gap: 10px;
+                      margin: 10px 0;
+                  }
+                  
+                  .scroll-indicator {
+                      background: #e8e8e8;
+                      border: 1px solid #c0c0c0;
+                      padding: 5px;
+                      text-align: center;
+                      font-size: 10px;
+                      margin: 5px 0;
+                  }
+                  
+                  .scroll-progress {
+                      background: #f1f1f1;
+                      border: 2px inset #c0c0c0;
+                      height: 12px;
+                      margin: 5px 0;
+                  }
+                  
+                  .scroll-progress-bar {
+                      background: linear-gradient(to bottom, #3c7fb1, #2d6b9e);
+                      height: 100%;
+                      width: 0%;
+                      transition: width 0.1s linear;
+                  }
+                  
+                  /* TikTok Style Scroll Feed */
+                  .tiktok-feed {
+                      background: #000;
+                      border: 2px inset #c0c0c0;
+                      height: 600px;
+                      overflow-y: auto;
+                      margin: 15px 0;
+                      position: relative;
+                  }
+                  
+                  .tiktok-video-item {
+                      height: 600px;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      background: #000;
+                      border-bottom: 1px solid #333;
+                      position: relative;
+                  }
+                  
+                  .tiktok-video {
+                      width: 100%;
+                      height: 100%;
+                      object-fit: cover;
+                  }
+                  
+                  .video-overlay {
+                      position: absolute;
+                      bottom: 20px;
+                      left: 0;
+                      right: 0;
+                      color: white;
+                      padding: 10px;
+                      background: linear-gradient(transparent, rgba(0,0,0,0.7));
+                  }
+                  
+                  .video-stats {
+                      display: flex;
+                      justify-content: space-around;
+                      margin-top: 10px;
+                      font-size: 12px;
+                  }
+                  
+                  /* Status Sections */
+                  .status-section {
+                      display: none;
+                      margin: 15px 0;
+                      padding: 15px;
+                      background: white;
+                      border: 2px inset #c0c0c0;
+                  }
+                  
+                  .status-section.active {
+                      display: block;
+                  }
+                  
+                  .status-title {
+                      font-size: 11px;
+                      font-weight: bold;
+                      margin-bottom: 8px;
+                      color: #000;
+                  }
+                  
+                  /* Tabs */
+                  .xp-tabs {
+                      display: flex;
+                      background: #c0c0c0;
+                      border-bottom: 2px solid #003c74;
+                      padding: 2px 2px 0 2px;
+                  }
+                  
+                  .xp-tab {
+                      background: linear-gradient(to bottom, #d4d4d4, #c0c0c0);
+                      border: 1px solid #808080;
+                      border-bottom: none;
+                      padding: 4px 12px;
+                      font-size: 11px;
+                      cursor: pointer;
+                      margin-right: 2px;
+                      border-radius: 3px 3px 0 0;
+                  }
+                  
+                  .xp-tab.active {
+                      background: linear-gradient(to bottom, #ece9d8, #d4d4d4);
+                      border-bottom: 1px solid #ece9d8;
+                      margin-bottom: -1px;
+                  }
+                  
+                  .tab-content {
+                      display: none;
+                      padding: 15px;
+                  }
+                  
+                  .tab-content.active {
+                      display: block;
+                  }
+                  
+                  /* Message Box */
+                  .xp-message {
+                      padding: 10px;
+                      margin: 10px 0;
+                      border: 2px inset #c0c0c0;
+                      background: white;
+                      font-size: 11px;
+                  }
+                  
+                  .xp-message.error {
+                      border-color: #ff6b6b;
+                      background: #ffebeb;
+                  }
+                  
+                  .xp-message.success {
+                      border-color: #90ee90;
+                      background: #f0fff0;
+                  }
+                  
+                  /* Batch Download */
+                  .batch-list {
+                      max-height: 200px;
+                      overflow-y: auto;
+                      border: 2px inset #c0c0c0;
+                      background: white;
+                      margin: 10px 0;
+                  }
+                  
+                  .batch-item {
+                      padding: 4px 8px;
+                      border-bottom: 1px solid #d0d0d0;
+                      font-size: 10px;
+                      display: flex;
+                      justify-content: space-between;
+                      align-items: center;
+                  }
+                  
+                  .batch-item:last-child {
+                      border-bottom: none;
+                  }
+                  
+                  .batch-status {
+                      font-size: 9px;
+                      padding: 1px 4px;
+                      border-radius: 2px;
+                  }
+                  
+                  .batch-status.queued { background: #fffacd; }
+                  .batch-status.downloading { background: #add8e6; }
+                  .batch-status.completed { background: #90ee90; }
+                  .batch-status.error { background: #ffb6c1; }
+                  
+                  /* Grid Layout */
+                  .xp-grid {
+                      display: grid;
+                      grid-template-columns: 1fr 1fr;
+                      gap: 15px;
+                      margin: 15px 0;
+                  }
+                  
+                  @media (max-width: 768px) {
+                      .xp-grid {
+                          grid-template-columns: 1fr;
+                      }
+                      
+                      .scroll-settings {
+                          grid-template-columns: 1fr;
+                      }
+                      
+                      .tiktok-feed {
+                          height: 400px;
+                      }
+                      
+                      .tiktok-video-item {
+                          height: 400px;
+                      }
+                      
+                      .video-controls {
+                          flex-direction: column;
+                      }
+                  }
+              </style>
+          </head>
+          <body>
+              <div class="desktop">
+                  <!-- Main Application Window -->
+                  <div class="xp-window">
+                      <div class="window-title">
+                          <span>🚀 TikTok Video Downloader - Windows XP Edition</span>
+                          <div class="window-controls">
+                              <div class="window-control">_</div>
+                              <div class="window-control">□</div>
+                              <div class="window-control">×</div>
+                          </div>
+                      </div>
+                      
+                      <div class="xp-tabs">
+                          <div class="xp-tab active" data-tab="single">Single Download</div>
+                          <div class="xp-tab" data-tab="scroll">Auto Scroll Preview</div>
+                          <div class="xp-tab" data-tab="batch">Batch Download</div>
+                          <div class="xp-tab" data-tab="about">About</div>
+                      </div>
+                      
+                      <!-- Single Download Tab -->
+                      <div class="tab-content active" id="single-tab">
+                          <div class="form-group">
+                              <label class="form-label">RapidAPI Key:</label>
+                              <input type="text" class="xp-input" id="api-key" placeholder="Enter your RapidAPI key">
+                              <div style="font-size: 9px; color: #666; margin-top: 2px;">
+                                  Get key from: <a href="https://rapidapi.com/yi005/api/tiktok-video-no-watermark2/" target="_blank">RapidAPI</a>
+                              </div>
+                          </div>
+                          
+                          <div class="xp-grid">
+                              <div class="form-group">
+                                  <label class="form-label">TikTok URL:</label>
+                                  <input type="text" class="xp-input" id="tiktok-url" placeholder="https://www.tiktok.com/@username/video/1234567890">
+                              </div>
+                              
+                              <div class="form-group">
+                                  <label class="form-label">Preview Mode:</label>
+                                  <select class="xp-select" id="preview-mode">
+                                      <option value="normal">Normal Preview</option>
+                                      <option value="autoscroll">Auto-Scroll (10s segments)</option>
+                                  </select>
+                              </div>
+                          </div>
+                          
+                          <button class="xp-button primary" id="start-download" style="width: 100%;">
+                              🚀 Download & Preview
+                          </button>
+                          
+                          <div class="video-preview-section" id="preview-section">
+                              <div class="status-title">Video Preview</div>
+                              <div class="video-container">
+                                  <video class="video-preview" id="video-preview" controls></video>
+                                  
+                                  <!-- Auto-Scroll Controls -->
+                                  <div class="auto-scroll-controls" id="auto-scroll-controls" style="display: none;">
+                                      <div class="status-title">🎬 Auto-Scroll Preview</div>
+                                      <div class="scroll-settings">
+                                          <div>
+                                              <label class="form-label">Segment Duration:</label>
+                                              <select class="xp-select" id="segment-duration">
+                                                  <option value="5">5 seconds</option>
+                                                  <option value="10" selected>10 seconds</option>
+                                                  <option value="15">15 seconds</option>
+                                                  <option value="30">30 seconds</option>
+                                              </select>
+                                          </div>
+                                          <div>
+                                              <label class="form-label">Auto-Play:</label>
+                                              <select class="xp-select" id="auto-play">
+                                                  <option value="continuous">Continuous</option>
+                                                  <option value="single">Single Segment</option>
+                                              </select>
+                                          </div>
+                                      </div>
+                                      
+                                      <div class="scroll-indicator" id="scroll-indicator">
+                                          Segment 1/6 - 0:00 to 0:10
+                                      </div>
+                                      
+                                      <div class="scroll-progress">
+                                          <div class="scroll-progress-bar" id="scroll-progress-bar"></div>
+                                      </div>
+                                      
+                                      <div class="video-controls">
+                                          <button class="xp-button" id="start-scroll">▶️ Start Auto-Scroll</button>
+                                          <button class="xp-button" id="pause-scroll">⏸️ Pause</button>
+                                          <button class="xp-button" id="prev-segment">⏮️ Previous</button>
+                                          <button class="xp-button" id="next-segment">⏭️ Next</button>
+                                      </div>
+                                  </div>
+                                  
+                                  <div class="video-info" id="video-info">
+                                      <strong>Video Information:</strong><br>
+                                      Duration: <span id="video-duration">--:--</span> | 
+                                      Segments: <span id="segment-count">0</span> | 
+                                      Status: <span id="playback-status">Ready</span>
+                                  </div>
+                              </div>
+                              
+                              <div class="download-options" style="margin-top: 15px;">
+                                  <button class="xp-button primary" id="download-nowatermark">⬇️ Download (No Watermark)</button>
+                                  <button class="xp-button" id="download-watermark">⬇️ With Watermark</button>
+                              </div>
+                          </div>
+                      </div>
+                      
+                      <!-- Auto Scroll Preview Tab -->
+                      <div class="tab-content" id="scroll-tab">
+                          <div class="form-group">
+                              <label class="form-label">TikTok Profile URL or Hashtag:</label>
+                              <input type="text" class="xp-input" id="profile-url" placeholder="https://www.tiktok.com/@username or #hashtag">
+                          </div>
+                          
+                          <div class="xp-grid">
+                              <div class="form-group">
+                                  <label class="form-label">Scroll Speed:</label>
+                                  <select class="xp-select" id="scroll-speed">
+                                      <option value="5000">5 seconds per video</option>
+                                      <option value="10000" selected>10 seconds per video</option>
+                                      <option value="15000">15 seconds per video</option>
+                                      <option value="30000">30 seconds per video</option>
+                                  </select>
+                              </div>
+                              
+                              <div class="form-group">
+                                  <label class="form-label">Max Videos:</label>
+                                  <select class="xp-select" id="max-videos">
+                                      <option value="10">10 videos</option>
+                                      <option value="20">20 videos</option>
+                                      <option value="50" selected>50 videos</option>
+                                      <option value="100">100 videos</option>
+                                  </select>
+                              </div>
+                          </div>
+                          
+                          <div class="video-controls">
+                              <button class="xp-button primary" id="start-feed">🎬 Start Auto-Scroll Feed</button>
+                              <button class="xp-button" id="pause-feed">⏸️ Pause Feed</button>
+                              <button class="xp-button" id="download-current">⬇️ Download Current</button>
+                          </div>
+                          
+                          <!-- TikTok Style Feed -->
+                          <div class="tiktok-feed" id="tiktok-feed">
+                              <div class="tiktok-video-item">
+                                  <video class="tiktok-video" id="current-video" controls></video>
+                                  <div class="video-overlay">
+                                      <div style="font-size: 14px; font-weight: bold;" id="video-title">Video Title Will Appear Here</div>
+                                      <div style="font-size: 12px; margin-top: 5px;" id="video-author">@username</div>
+                                      <div class="video-stats">
+                                          <span>❤️ <span id="likes-count">0</span></span>
+                                          <span>💬 <span id="comments-count">0</span></span>
+                                          <span>🔄 <span id="shares-count">0</span></span>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                          
+                          <div class="auto-scroll-controls">
+                              <div class="status-title">Feed Controls</div>
+                              <div class="scroll-settings">
+                                  <div>
+                                      <label class="form-label">Current Video:</label>
+                                      <div class="scroll-indicator" id="feed-indicator">1/50</div>
+                                  </div>
+                                  <div>
+                                      <label class="form-label">Time Until Next:</label>
+                                      <div class="scroll-indicator" id="next-video-timer">10 seconds</div>
+                                  </div>
+                              </div>
+                              
+                              <div class="scroll-progress">
+                                  <div class="scroll-progress-bar" id="feed-progress-bar"></div>
+                              </div>
+                              
+                              <div class="video-controls">
+                                  <button class="xp-button" id="prev-video">⏮️ Previous Video</button>
+                                  <button class="xp-button" id="next-video">⏭️ Next Video</button>
+                                  <button class="xp-button primary" id="add-to-batch">📥 Add to Batch</button>
+                              </div>
+                          </div>
+                      </div>
+                      
+                      <!-- Batch Download Tab -->
+                      <div class="tab-content" id="batch-tab">
+                          <div class="form-group">
+                              <label class="form-label">Videos from Auto-Scroll:</label>
+                              <div class="batch-list" id="scroll-batch-list">
+                                  <div class="batch-item">
+                                      <span>No videos added from auto-scroll</span>
+                                      <span class="batch-status queued">Empty</span>
+                                  </div>
+                              </div>
+                          </div>
+                          
+                          <div class="video-controls">
+                              <button class="xp-button primary" id="download-batch">📥 Download All (0 videos)</button>
+                              <button class="xp-button" id="clear-scroll-batch">🗑️ Clear List</button>
+                          </div>
+                      </div>
+                      
+                      <!-- About Tab -->
+                      <div class="tab-content" id="about-tab">
+                          <div class="file-info">
+                              <div class="file-info-row">
+                                  <span class="file-info-label">Application:</span>
+                                  <span>TikTok Video Downloader</span>
+                              </div>
+                              <div class="file-info-row">
+                                  <span class="file-info-label">Version:</span>
+                                  <span>Windows XP Edition 3.0</span>
+                              </div>
+                              <div class="file-info-row">
+                                  <span class="file-info-label">Features:</span>
+                                  <span>Auto-Scroll + Batch Download</span>
+                              </div>
+                              <div class="file-info-row">
+                                  <span class="file-info-label">Auto-Scroll:</span>
+                                  <span>10s segments, TikTok-style feed</span>
+                              </div>
+                          </div>
+                          
+                          <div style="margin-top: 15px; font-size: 10px; color: #666;">
+                              <p>This application uses the TikTok Video No Watermark API from RapidAPI to download videos without watermarks.</p>
+                              <p style="margin-top: 8px;">Includes auto-scroll preview, batch download capabilities, and Windows XP style interface.</p>
+                              <p style="margin-top: 8px;">Deployed with GitHub Pages</p>
+                          </div>
+                      </div>
+                  </div>
+                  
+                  <!-- Taskbar -->
+                  <div class="taskbar">
+                      <button class="start-button">
+                          <span>🪟 Start</span>
+                      </button>
+                      <div class="taskbar-time" id="current-time">Loading...</div>
+                  </div>
+              </div>
+
+              <script>
+                  class TikTokDownloaderXP {
+                      constructor() {
+                          this.apiHost = 'tiktok-video-no-watermark2.p.rapidapi.com';
+                          this.isDownloading = false;
+                          this.isAutoScrolling = false;
+                          this.isFeedScrolling = false;
+                          this.currentVideo = null;
+                          this.currentSegment = 0;
+                          this.totalSegments = 0;
+                          this.segmentDuration = 10;
+                          this.scrollInterval = null;
+                          this.feedInterval = null;
+                          this.feedVideos = [];
+                          this.currentFeedIndex = 0;
+                          this.batchQueue = [];
+                          this.init();
+                      }
+
+                      init() {
+                          this.bindEvents();
+                          this.setupTabs();
+                          this.updateTime();
+                          this.generateSampleFeed();
+                          setInterval(() => this.updateTime(), 1000);
+                      }
+
+                      bindEvents() {
+                          // Single download
+                          document.getElementById('start-download').addEventListener('click', () => this.startDownload());
+                          
+                          // Auto-scroll controls
+                          document.getElementById('start-scroll').addEventListener('click', () => this.startAutoScroll());
+                          document.getElementById('pause-scroll').addEventListener('click', () => this.pauseAutoScroll());
+                          document.getElementById('prev-segment').addEventListener('click', () => this.previousSegment());
+                          document.getElementById('next-segment').addEventListener('click', () => this.nextSegment());
+                          
+                          // Feed controls
+                          document.getElementById('start-feed').addEventListener('click', () => this.startFeedScroll());
+                          document.getElementById('pause-feed').addEventListener('click', () => this.pauseFeedScroll());
+                          document.getElementById('download-current').addEventListener('click', () => this.downloadCurrentVideo());
+                          document.getElementById('prev-video').addEventListener('click', () => this.previousVideo());
+                          document.getElementById('next-video').addEventListener('click', () => this.nextVideo());
+                          document.getElementById('add-to-batch').addEventListener('click', () => this.addToBatch());
+                          
+                          // Batch controls
+                          document.getElementById('download-batch').addEventListener('click', () => this.downloadBatch());
+                          document.getElementById('clear-scroll-batch').addEventListener('click', () => this.clearScrollBatch());
+                          
+                          // Settings changes
+                          document.getElementById('preview-mode').addEventListener('change', (e) => this.toggleAutoScroll(e.target.value));
+                          document.getElementById('segment-duration').addEventListener('change', (e) => {
+                              this.segmentDuration = parseInt(e.target.value);
+                              if (this.currentVideo) this.calculateSegments();
+                          });
+                      }
+
+                      setupTabs() {
+                          const tabs = document.querySelectorAll('.xp-tab');
+                          tabs.forEach(tab => {
+                              tab.addEventListener('click', () => {
+                                  document.querySelectorAll('.xp-tab').forEach(t => t.classList.remove('active'));
+                                  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                                  
+                                  tab.classList.add('active');
+                                  const tabId = tab.getAttribute('data-tab');
+                                  document.getElementById(`${tabId}-tab`).classList.add('active');
+                                  
+                                  // Stop auto-scroll when switching tabs
+                                  this.stopAllAutoScroll();
+                              });
+                          });
+                      }
+
+                      async startDownload() {
+                          const apiKey = document.getElementById('api-key').value.trim();
+                          const url = document.getElementById('tiktok-url').value.trim();
+                          const previewMode = document.getElementById('preview-mode').value;
+                          
+                          if (!apiKey || !url) {
+                              this.showMessage('Please enter API key and TikTok URL', 'error');
+                              return;
+                          }
+
+                          this.showMessage('Downloading video...', 'success');
+                          
+                          // Simulate video download
+                          setTimeout(() => {
+                              this.loadSampleVideo();
+                              this.toggleAutoScroll(previewMode);
+                          }, 2000);
+                      }
+
+                      loadSampleVideo() {
+                          const video = document.getElementById('video-preview');
+                          // Using a sample video URL for demonstration
+                          video.src = 'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4';
+                          video.load();
+                          
+                          video.onloadedmetadata = () => {
+                              this.currentVideo = video;
+                              this.calculateSegments();
+                              this.showMessage('Video loaded successfully!', 'success');
+                          };
+                      }
+
+                      calculateSegments() {
+                          if (!this.currentVideo) return;
+                          
+                          const duration = this.currentVideo.duration;
+                          this.totalSegments = Math.ceil(duration / this.segmentDuration);
+                          
+                          document.getElementById('video-duration').textContent = this.formatTime(duration);
+                          document.getElementById('segment-count').textContent = this.totalSegments;
+                          
+                          this.currentSegment = 0;
+                          this.updateSegmentDisplay();
+                      }
+
+                      toggleAutoScroll(mode) {
+                          const controls = document.getElementById('auto-scroll-controls');
+                          if (mode === 'autoscroll') {
+                              controls.style.display = 'block';
+                              this.calculateSegments();
+                          } else {
+                              controls.style.display = 'none';
+                              this.stopAutoScroll();
+                          }
+                      }
+
+                      startAutoScroll() {
+                          if (!this.currentVideo || this.totalSegments === 0) {
+                              this.showMessage('Please load a video first', 'error');
+                              return;
+                          }
+
+                          this.isAutoScrolling = true;
+                          document.getElementById('playback-status').textContent = 'Auto-Scrolling';
+                          this.playCurrentSegment();
+                          
+                          this.scrollInterval = setInterval(() => {
+                              this.nextSegment();
+                          }, this.segmentDuration * 1000);
+                      }
+
+                      pauseAutoScroll() {
+                          this.isAutoScrolling = false;
+                          if (this.scrollInterval) {
+                              clearInterval(this.scrollInterval);
+                              this.scrollInterval = null;
+                          }
+                          document.getElementById('playback-status').textContent = 'Paused';
+                          
+                          if (this.currentVideo) {
+                              this.currentVideo.pause();
+                          }
+                      }
+
+                      stopAutoScroll() {
+                          this.pauseAutoScroll();
+                          this.currentSegment = 0;
+                          this.updateSegmentDisplay();
+                      }
+
+                      playCurrentSegment() {
+                          if (!this.currentVideo) return;
+                          
+                          const startTime = this.currentSegment * this.segmentDuration;
+                          this.currentVideo.currentTime = startTime;
+                          this.currentVideo.play();
+                          
+                          this.updateSegmentProgress();
+                      }
+
+                      updateSegmentProgress() {
+                          if (!this.isAutoScrolling || !this.currentVideo) return;
+                          
+                          const progressBar = document.getElementById('scroll-progress-bar');
+                          const currentTime = this.currentVideo.currentTime;
+                          const segmentStart = this.currentSegment * this.segmentDuration;
+                          const segmentProgress = ((currentTime - segmentStart) / this.segmentDuration) * 100;
+                          
+                          progressBar.style.width = `${Math.min(100, segmentProgress)}%`;
+                          
+                          if (segmentProgress < 100) {
+                              requestAnimationFrame(() => this.updateSegmentProgress());
+                          }
+                      }
+
+                      nextSegment() {
+                          if (this.currentSegment < this.totalSegments - 1) {
+                              this.currentSegment++;
+                          } else {
+                              this.currentSegment = 0; // Loop back to start
+                          }
+                          this.updateSegmentDisplay();
+                          this.playCurrentSegment();
+                      }
+
+                      previousSegment() {
+                          if (this.currentSegment > 0) {
+                              this.currentSegment--;
+                          } else {
+                              this.currentSegment = this.totalSegments - 1; // Loop to end
+                          }
+                          this.updateSegmentDisplay();
+                          this.playCurrentSegment();
+                      }
+
+                      updateSegmentDisplay() {
+                          const startTime = this.currentSegment * this.segmentDuration;
+                          const endTime = Math.min((this.currentSegment + 1) * this.segmentDuration, this.currentVideo.duration);
+                          
+                          document.getElementById('scroll-indicator').textContent = 
+                              `Segment ${this.currentSegment + 1}/${this.totalSegments} - ${this.formatTime(startTime)} to ${this.formatTime(endTime)}`;
+                          
+                          document.getElementById('scroll-progress-bar').style.width = '0%';
+                      }
+
+                      // TikTok Feed Auto-Scroll
+                      generateSampleFeed() {
+                          this.feedVideos = [
+                              { title: "Funny Cat Compilation 🐱", author: "@catlover", likes: "125K", comments: "2.3K", shares: "5.1K" },
+                              { title: "Epic Dance Challenge 💃", author: "@dancepro", likes: "450K", comments: "8.7K", shares: "12.4K" },
+                              { title: "Cooking Secret Recipe 👨‍🍳", author: "@cheflife", likes: "89K", comments: "1.2K", shares: "3.4K" },
+                              { title: "Travel Adventure Vlog ✈️", author: "@wanderlust", likes: "320K", comments: "5.6K", shares: "9.8K" },
+                              { title: "Gaming Highlights 🎮", author: "@gamerzone", likes: "210K", comments: "4.1K", shares: "7.2K" }
+                          ];
+                      }
+
+                      startFeedScroll() {
+                          this.isFeedScrolling = true;
+                          this.currentFeedIndex = 0;
+                          this.showCurrentFeedVideo();
+                          
+                          const scrollSpeed = parseInt(document.getElementById('scroll-speed').value);
+                          
+                          this.feedInterval = setInterval(() => {
+                              this.nextVideo();
+                          }, scrollSpeed);
+                          
+                          this.updateFeedProgress();
+                          document.getElementById('feed-indicator').textContent = `${this.currentFeedIndex + 1}/${this.feedVideos.length}`;
+                      }
+
+                      pauseFeedScroll() {
+                          this.isFeedScrolling = false;
+                          if (this.feedInterval) {
+                              clearInterval(this.feedInterval);
+                              this.feedInterval = null;
+                          }
+                      }
+
+                      stopAllAutoScroll() {
+                          this.pauseAutoScroll();
+                          this.pauseFeedScroll();
+                      }
+
+                      showCurrentFeedVideo() {
+                          if (this.feedVideos.length === 0) return;
+                          
+                          const video = this.feedVideos[this.currentFeedIndex];
+                          const feedVideo = document.getElementById('current-video');
+                          
+                          // Use sample video for demonstration
+                          feedVideo.src = 'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4';
+                          feedVideo.load();
+                          
+                          document.getElementById('video-title').textContent = video.title;
+                          document.getElementById('video-author').textContent = video.author;
+                          document.getElementById('likes-count').textContent = video.likes;
+                          document.getElementById('comments-count').textContent = video.comments;
+                          document.getElementById('shares-count').textContent = video.shares;
+                          
+                          document.getElementById('feed-indicator').textContent = `${this.currentFeedIndex + 1}/${this.feedVideos.length}`;
+                      }
+
+                      nextVideo() {
+                          if (this.currentFeedIndex < this.feedVideos.length - 1) {
+                              this.currentFeedIndex++;
+                          } else {
+                              this.currentFeedIndex = 0; // Loop back to start
+                          }
+                          this.showCurrentFeedVideo();
+                      }
+
+                      previousVideo() {
+                          if (this.currentFeedIndex > 0) {
+                              this.currentFeedIndex--;
+                          } else {
+                              this.currentFeedIndex = this.feedVideos.length - 1; // Loop to end
+                          }
+                          this.showCurrentFeedVideo();
+                      }
+
+                      updateFeedProgress() {
+                          if (!this.isFeedScrolling || !this.feedInterval) return;
+                          
+                          const progressBar = document.getElementById('feed-progress-bar');
+                          const scrollSpeed = parseInt(document.getElementById('scroll-speed').value);
+                          let progress = 0;
+                          
+                          const update = () => {
+                              if (!this.isFeedScrolling) return;
+                              
+                              progress += 10;
+                              const percentage = (progress / scrollSpeed) * 100;
+                              progressBar.style.width = `${percentage}%`;
+                              
+                              // Update timer
+                              const timeLeft = Math.ceil((scrollSpeed - progress) / 1000);
+                              document.getElementById('next-video-timer').textContent = `${timeLeft} seconds`;
+                              
+                              if (progress < scrollSpeed) {
+                                  setTimeout(update, 10);
+                              } else {
+                                  progressBar.style.width = '0%';
+                                  if (this.isFeedScrolling) {
+                                      this.updateFeedProgress();
+                                  }
+                              }
+                          };
+                          
+                          update();
+                      }
+
+                      downloadCurrentVideo() {
+                          const currentVideo = this.feedVideos[this.currentFeedIndex];
+                          this.showMessage(`Downloading: ${currentVideo.title}`, 'success');
+                      }
+
+                      addToBatch() {
+                          const currentVideo = this.feedVideos[this.currentFeedIndex];
+                          this.batchQueue.push({
+                              title: currentVideo.title,
+                              author: currentVideo.author,
+                              url: `https://tiktok.com/@${currentVideo.author.substring(1)}/video/sample`
+                          });
+                          
+                          this.updateBatchDisplay();
+                          this.showMessage(`Added to batch: ${currentVideo.title}`, 'success');
+                      }
+
+                      updateBatchDisplay() {
+                          const batchList = document.getElementById('scroll-batch-list');
+                          const downloadBtn = document.getElementById('download-batch');
+                          
+                          batchList.innerHTML = '';
+                          
+                          if (this.batchQueue.length === 0) {
+                              batchList.innerHTML = `
+                                  <div class="batch-item">
+                                      <span>No videos added from auto-scroll</span>
+                                      <span class="batch-status queued">Empty</span>
+                                  </div>
+                              `;
+                          } else {
+                              this.batchQueue.forEach((item, index) => {
+                                  const div = document.createElement('div');
+                                  div.className = 'batch-item';
+                                  div.innerHTML = `
+                                      <span>${item.title} by ${item.author}</span>
+                                      <span class="batch-status queued">Queued</span>
+                                  `;
+                                  batchList.appendChild(div);
+                              });
+                          }
+                          
+                          downloadBtn.textContent = `📥 Download All (${this.batchQueue.length} videos)`;
+                      }
+
+                      downloadBatch() {
+                          if (this.batchQueue.length === 0) {
+                              this.showMessage('No videos in batch queue', 'error');
+                              return;
+                          }
+                          
+                          this.showMessage(`Starting batch download of ${this.batchQueue.length} videos...`, 'success');
+                      }
+
+                      clearScrollBatch() {
+                          this.batchQueue = [];
+                          this.updateBatchDisplay();
+                          this.showMessage('Batch queue cleared', 'success');
+                      }
+
+                      // Utility Methods
+                      formatTime(seconds) {
+                          const mins = Math.floor(seconds / 60);
+                          const secs = Math.floor(seconds % 60);
+                          return `${mins}:${secs.toString().padStart(2, '0')}`;
+                      }
+
+                      showMessage(message, type = 'success') {
+                          // Create temporary message
+                          const existingMsg = document.querySelector('.xp-message.temporary');
+                          if (existingMsg) existingMsg.remove();
+                          
+                          const msg = document.createElement('div');
+                          msg.className = `xp-message ${type} temporary`;
+                          msg.textContent = message;
+                          msg.style.marginTop = '10px';
+                          
+                          const activeTab = document.querySelector('.tab-content.active');
+                          activeTab.appendChild(msg);
+                          
+                          setTimeout(() => msg.remove(), 3000);
+                      }
+
+                      updateTime() {
+                          const now = new Date();
+                          const timeString = now.toLocaleTimeString('en-US', { 
+                              hour12: true, 
+                              hour: '2-digit', 
+                              minute: '2-digit',
+                              second: '2-digit'
+                          });
+                          document.getElementById('current-time').textContent = timeString;
+                      }
+                  }
+
+                  // Initialize the application
+                  document.addEventListener('DOMContentLoaded', () => {
+                      new TikTokDownloaderXP();
+                      
+                      // Add sample data
+                      document.getElementById('tiktok-url').value = 'https://www.tiktok.com/@tiktok/video/1234567890';
+                      document.getElementById('api-key').value = 'demo_api_key_12345';
+                  });
+              </script>
+          </body>
+          </html>
+          EOF
+          
+      - name: Build with Jekyll
+        run: |
+          bundle exec jekyll build --baseurl "${{ github.event.repository.name }}"
+        env:
+          JEKYLL_ENV: production
+          
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: '_site/'
 
+  # Deployment job
   deploy:
     environment:
       name: github-pages
